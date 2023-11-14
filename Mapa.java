@@ -108,7 +108,7 @@ public class Mapa {
             if(disposicio[X][Y].isPrecipicio()){ //si hi ha un precipici l'haurem de llevar a ell i les percepcions
                 put_precipicio(X,Y);
             }else if(disposicio[X][Y].isResplandor()){ //si hi ha un tresor a la casella, es llevarà el tresor
-                disposicio[X][Y].setResplandor(true);
+                put_tesoro(X, Y);
             }
             disposicio[X][Y].setMonstruo(true);
         }
