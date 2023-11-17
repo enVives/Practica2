@@ -18,8 +18,6 @@ public class Mapa {
                 disposicio[i][j] = new Casella();
             }
         }
-
-        disposicio[0][size-1].setRobot(true);
     }
 
     public int getSize(){
@@ -35,9 +33,9 @@ public class Mapa {
     public void put_precipicio(int X, int Y){
        if (X >= this.size || X < 0 || Y >= this.size || Y < 0) //si la casella es a fora no feim res
             return;
-            
-        if(disposicio[X][Y].isRobot()) return; //si a la casella hi ha el robot, no feim res
         
+        //si a la casella hi ha el robot, no feim res    
+        if(main.getRobot().getX() == X && main.getRobot().getY() == Y) return; 
 
         if(disposicio[X][Y].isPrecipicio()){ //si ja hi ha un precipici, el llevam
             disposicio[X][Y].setPrecipicio(false);
@@ -78,6 +76,8 @@ public class Mapa {
                 }
             }
         }
+        //cada pic que possam un objecte pot estar vora el robot, hem d'actualitzar
+        main.getRobot().actualitzarPercepcio();
     }
 
     public void put_brisa(int X, int Y){
@@ -100,7 +100,8 @@ public class Mapa {
         if (X >= this.size || X < 0 || Y >= this.size || Y < 0) //si la casella es a fora no feim res
             return;
 
-        if(disposicio[X][Y].isRobot()) return; //si a la casella hi ha el robot, no feim res
+        //si a la casella hi ha el robot, no feim res
+        if(main.getRobot().getX() == X && main.getRobot().getY() == Y) return; 
         
         if(disposicio[X][Y].isMonstruo()){ //si ja hi ha un precipici, el llevam
             disposicio[X][Y].setMonstruo(false);
@@ -121,7 +122,8 @@ public class Mapa {
         if (X >= this.size || X < 0 || Y >= this.size || Y < 0)
             return;
 
-        if(disposicio[X][Y].isRobot()) return; //si a la casella hi ha el robot, no feim res
+        //si a la casella hi ha el robot, no feim res
+        if(main.getRobot().getX() == X && main.getRobot().getY() == Y) return;
         
         if(disposicio[X][Y].isPrecipicio()){
             put_precipicio(X, Y);

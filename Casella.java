@@ -1,14 +1,8 @@
 public class Casella {
 
-    private boolean hedor,brisa,resplandor,monstruo,precipicio,robot;
-
-    public boolean isRobot() {
-        return robot;
-    }
-
-    public void setRobot(boolean robot) {
-        this.robot = robot;
-    }
+    private boolean hedor,brisa,resplandor;
+    private boolean monstruo,precipicio;
+    private int visites = 0;
 
     public boolean isPrecipicio() {
         return precipicio;
@@ -16,6 +10,14 @@ public class Casella {
 
     public void setPrecipicio(boolean precipicio) {
         this.precipicio = precipicio;
+    }
+
+    public void setVisitada() {
+        this.visites++;
+    }
+
+    public int getVisitada() {
+        return this.visites;
     }
 
     public boolean isMonstruo() {
@@ -32,7 +34,6 @@ public class Casella {
         resplandor = false;
         monstruo = false;
         precipicio = false;
-        robot = false;
     }
 
     public void llevar_percepcions(){
@@ -62,5 +63,11 @@ public class Casella {
 
     public void setHedor(boolean hedor) {
         this.hedor = hedor;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Hedor: %b, Brisa: %b, Resplandor:%b, Monstruo:%b, Preci.:%b, Visites:%d"
+        ,hedor,brisa,resplandor,monstruo,precipicio,visites);
     }
 }

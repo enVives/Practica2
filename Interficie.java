@@ -161,8 +161,6 @@ public class Interficie extends JFrame {
             int casX = e.getX() / (dimCasella);
             int casY = e.getY() / (dimCasella);
             if (SwingUtilities.isLeftMouseButton(e)) {
-
-                // System.out.println("casX: "+casX+" casY:" +casY);
                 if (torn != null) {
                     switch (torn) {
                         case 1:
@@ -287,7 +285,6 @@ public class Interficie extends JFrame {
             Polygon triangle = new Polygon();
             int xRobot = main.getRobot().getX();
             int yRobot = main.getRobot().getY();
-            System.out.printf("X:%d, Y:%d\n",xRobot,yRobot);
             switch(main.getRobot().getOrientacio()) {
                 case 1:
                     triangle.addPoint(trianglePoints[0].x + lineSize*xRobot,trianglePoints[0].y + lineSize*yRobot);
