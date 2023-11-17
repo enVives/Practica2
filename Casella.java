@@ -1,7 +1,6 @@
 public class Casella {
 
-    private boolean hedor,brisa,resplandor,monstruo,precipicio;
-    private boolean robot;
+    private boolean hedor,brisa,resplandor,monstruo,precipicio,robot;
 
     public boolean isRobot() {
         return robot;

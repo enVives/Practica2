@@ -23,7 +23,6 @@ public class Interficie extends JFrame {
         this.main = main;
         torn = null;
         try {
-            // Load the image from a file (change the file path accordingly)
             tresor = ImageIO.read(new File("tresor.png"));
         } catch (IOException e) {
             System.out.println(e.toString());
@@ -59,12 +58,14 @@ public class Interficie extends JFrame {
         JButton posarPrecipici;
         JButton posarMonstruo;
         JButton posarTresor;
+        JButton avancar;
+        JButton girar;
 
         private Main main;
 
         public panellBotons(Main main) {
             this.main = main;
-            setLayout(new GridLayout(6, 1));
+            setLayout(new GridLayout(8, 1));
 
             posarPrecipici = new JButton("Precipici");
             posarMonstruo = new JButton("Monstre");
@@ -73,6 +74,14 @@ public class Interficie extends JFrame {
             tempsAccio = new JButton("Canviar Temps d'Acció");
             llargMapa = new JButton("Canviar LLargària Mapa");
             activarRobot = new JButton("ATURAT");
+
+            //PROVES
+            girar = new JButton("GIRAR SENTIT");
+            avancar = new JButton("AVANCAR");
+            girar.addActionListener(this);
+            avancar.addActionListener(this);
+            this.add(girar);
+            this.add(avancar);
 
             tempsAccio.addActionListener(this);
             llargMapa.addActionListener(this);
@@ -129,6 +138,10 @@ public class Interficie extends JFrame {
                 torn = 2;
             } else if (arg0.getSource() == posarTresor) {
                 torn = 3;
+            } else if (arg0.getSource() == avancar) {
+                main.notificar("avancar");
+            } else if (arg0.getSource() == girar) {
+                main.notificar("girar");
             }
         }
     }
@@ -149,7 +162,7 @@ public class Interficie extends JFrame {
             int casY = e.getY() / (dimCasella);
             if (SwingUtilities.isLeftMouseButton(e)) {
 
-                System.out.println("casX: "+casX+" casY:" +casY);
+                // System.out.println("casX: "+casX+" casY:" +casY);
                 if (torn != null) {
                     switch (torn) {
                         case 1:
@@ -218,6 +231,12 @@ public class Interficie extends JFrame {
             g2.setStroke(new BasicStroke(3));
             g2.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
             lineSize = mapDimension / main.getMapa().getSize();
+            //es [2] es es que apunta
+            Point trianglePoints[] = {
+                new Point(lineSize/5, (lineSize/6)*1),
+                new Point(lineSize/5, (lineSize/6)*5),
+                new Point((lineSize/5) * 4, (lineSize/6)*3)
+            };
             for (int i = 1; i <= main.getMapa().getSize(); i++) {
                 g2.drawLine(0, lineSize * i, mapDimension, lineSize * i);
                 g2.drawLine(lineSize * i, 0, lineSize * i, mapDimension);
@@ -254,16 +273,46 @@ public class Interficie extends JFrame {
                         if (casella.isHedor()) {
                             g2.drawString("Hedor", (lineSize * i)+5, (lineSize * j)+20 + desplx);
                         }
-                        if(casella.isRobot()){
-                            g2.setColor(Color.RED); // pinta bolla
-                            int radio = lineSize / 4;
-                            g2.fillOval(((lineSize * i)+ lineSize / 2) - radio, ((lineSize * j)+ lineSize / 2) - radio, radio * 2, radio * 2);
+                        // if(casella.isRobot()){
+                        //     g2.setColor(Color.RED); // pinta bolla
+                        //     int radio = lineSize / 4;
+                        //     g2.fillOval(((lineSize * i)+ lineSize / 2) - radio, ((lineSize * j)+ lineSize / 2) - radio, radio * 2, radio * 2);
 
-                        }
+                        // }
 
                     }
                 }
             }
+            //Pintam robot
+            Polygon triangle = new Polygon();
+            int xRobot = main.getRobot().getX();
+            int yRobot = main.getRobot().getY();
+            System.out.printf("X:%d, Y:%d\n",xRobot,yRobot);
+            switch(main.getRobot().getOrientacio()) {
+                case 1:
+                    triangle.addPoint(trianglePoints[0].x + lineSize*xRobot,trianglePoints[0].y + lineSize*yRobot);
+                    triangle.addPoint(trianglePoints[1].x + lineSize*xRobot,trianglePoints[1].y + lineSize*yRobot);
+                    triangle.addPoint(trianglePoints[2].x + lineSize*xRobot,trianglePoints[2].y + lineSize*yRobot);
+                    break;
+                case 2:
+                    triangle.addPoint(trianglePoints[1].x + lineSize*xRobot, trianglePoints[1].y + lineSize*yRobot);
+                    triangle.addPoint((lineSize - trianglePoints[1].x) + lineSize*xRobot, trianglePoints[1].y + lineSize*yRobot);
+                    triangle.addPoint(lineSize/2 + lineSize*xRobot,(lineSize-trianglePoints[2].x) + lineSize*yRobot);
+                    break;
+                case 3:
+                    triangle.addPoint((lineSize-trianglePoints[0].x) + lineSize*xRobot,(trianglePoints[0].y) + lineSize*yRobot);
+                    triangle.addPoint((lineSize-trianglePoints[1].x) + lineSize*xRobot,(trianglePoints[1].y) + lineSize*yRobot);
+                    triangle.addPoint((lineSize-trianglePoints[2].x) + lineSize*xRobot,(trianglePoints[2].y) + lineSize*yRobot);
+                    break;
+                case 4:
+                    triangle.addPoint(trianglePoints[1].x + lineSize*xRobot, lineSize - trianglePoints[1].y + lineSize*yRobot);
+                    triangle.addPoint((lineSize - trianglePoints[1].x) + lineSize*xRobot, lineSize - trianglePoints[1].y + lineSize*yRobot);
+                    triangle.addPoint(lineSize/2 + lineSize*xRobot,trianglePoints[2].x + lineSize*yRobot);
+                    break;
+                default:
+            }
+            g2.setColor(Color.GREEN);
+            g2.fillPolygon(triangle);
 
             pinta.drawImage(bima, 0, 0, null);
         }

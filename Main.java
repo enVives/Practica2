@@ -1,5 +1,6 @@
 public class Main implements InterficiePrincipal {
     private Mapa mapa;
+    private Robot robot;
     private Interficie interficie;
 
     private static int mapSize = 7;
@@ -11,6 +12,7 @@ public class Main implements InterficiePrincipal {
 
     private Main() {
         this.mapa = new Mapa(this, mapSize);
+        this.robot = new Robot(this);
         this.interficie = new Interficie(this);
         interficie.mostrar();
     }
@@ -19,12 +21,16 @@ public class Main implements InterficiePrincipal {
         return this.mapa;
     }
 
+    public Robot getRobot() {
+        return this.robot;
+    }
+
     public void reiniciar_Mapa(){
         this.mapa = new Mapa(this, mapSize);
     }
 
     public void setSize(Integer size){
-        this.mapSize = size;
+        mapSize = size;
     }
 
     public Interficie getInterficie() {
@@ -34,6 +40,10 @@ public class Main implements InterficiePrincipal {
 
     public int getWaitTime() {
         return waitTime;
+    }
+
+    public int getMapSize() {
+        return mapSize;
     }
 
     public void setAccioDelay(int delay) {
@@ -48,6 +58,11 @@ public class Main implements InterficiePrincipal {
             this.interficie.repintar();
         }else if(msg.contentEquals("Repintar")){
             this.interficie.repintar();
+        }else if(msg.contentEquals("girar")){
+            this.robot.girar(0);
+            this.interficie.repintar();
+        }else if(msg.contentEquals("avancar")){
+            this.robot.avancar();
         }
     }
 
