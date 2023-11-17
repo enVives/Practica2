@@ -59,7 +59,7 @@ public class Main implements InterficiePrincipal {
         }else if(msg.contentEquals("Repintar")){
             this.interficie.repintar();
         }else if(msg.contentEquals("girar")){
-            this.robot.girar(0);
+            this.robot.girar();
             this.interficie.repintar();
         }else if(msg.contentEquals("avancar")){
             this.robot.avancar();

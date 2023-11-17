@@ -6,6 +6,9 @@ public class Mapa {
     private boolean robot = false;
     private Integer ntesoros;
 
+    private int vX[] = {1,0,-1,0};
+    private int vY[] = {0,-1,0,1};
+
     public Mapa(Main main, int size) {
         this.main = main;
         this.size = size;
@@ -35,7 +38,10 @@ public class Mapa {
             return;
         
         //si a la casella hi ha el robot, no feim res    
-        if(main.getRobot().getX() == X && main.getRobot().getY() == Y) return; 
+        if(main.getRobot().getX() == X && main.getRobot().getY() == Y) return;
+        for (int i = 0; i < 4; i++) {
+            if(main.getRobot().getX()+vX[i] == X && main.getRobot().getY()+vY[i] == Y) return;
+        } 
 
         if(disposicio[X][Y].isPrecipicio()){ //si ja hi ha un precipici, el llevam
             disposicio[X][Y].setPrecipicio(false);
@@ -101,8 +107,10 @@ public class Mapa {
             return;
 
         //si a la casella hi ha el robot, no feim res
-        if(main.getRobot().getX() == X && main.getRobot().getY() == Y) return; 
-        
+        if(main.getRobot().getX() == X && main.getRobot().getY() == Y) return;
+        for (int i = 0; i < 4; i++) {
+            if(main.getRobot().getX()+vX[i] == X && main.getRobot().getY()+vY[i] == Y) return;
+        }
         if(disposicio[X][Y].isMonstruo()){ //si ja hi ha un precipici, el llevam
             disposicio[X][Y].setMonstruo(false);
         }else{
