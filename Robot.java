@@ -1,52 +1,63 @@
 public class Robot {
     private Main main;
 
+    private Casella[] BC;
     private Casella[] percepcio_actual; // 0:EST 1:NORD 2:OEST 3:SUD
     private Casella[] percepcio_anterior;
+    private Direccions accioAnterior;
 
-    private int orientacio; // 1:EST 2:NORD 3:OEST 4:SUD
+    private Direccions orientacio; // 1:EST 2:NORD 3:OEST 4:SUD
     private int tresor = 0;
     private int X;
     private int Y;
 
     public Robot(Main main) {
         this.main = main;
-        this.orientacio = 1;
-        this.X = 0;
-        this.Y = main.getMapSize() - 1;
+        this.orientacio = Direccions.ESTE;
+        // this.X = 0;
+        // this.Y = main.getMapSize() - 1;
+        this.X = 3;
+        this.Y = 5;
+        this.BC = new Casella[main.getMapSize()*main.getMapSize()];
         // PROVES PER PERCEBRE
         actualitzarPercepcio();
     }
 
     public void girar() {
-        if (this.orientacio == 4) {
-            this.orientacio = 1;
-        } else {
-            this.orientacio++;
+        if (this.orientacio == Direccions.SUD) {
+            this.orientacio = Direccions.ESTE;
+        } else if (this.orientacio == Direccions.ESTE){
+            this.orientacio = Direccions.NORTE;
+        } else if (this.orientacio == Direccions.NORTE){
+            this.orientacio = Direccions.OESTE;
+        } else if (this.orientacio == Direccions.OESTE){
+            this.orientacio = Direccions.SUD;
         }
-        // PROVES PER PERCEBRE
-        actualitzarPercepcio();
     }
 
     // Despres de cada avancar s'ha de repintar el tauler
-    public void avancar() {
-        switch (this.orientacio) {
-            case 1:
+    public void avancar(Direccions dir) {
+        while (this.orientacio != dir) {
+            girar();
+        }
+        switch (dir) {
+            case ESTE:
                 this.X++;
                 break;
-            case 2:
+            case NORTE:
                 this.Y--;
                 break;
-            case 3:
+            case OESTE:
                 this.X--;
                 break;
-            case 4:
+            case SUD:
                 this.Y++;
                 break;
             default:
                 System.out.println("ORIENTACIO NO POSIBLE");
         }
         // PROVES PER PERCEBRE
+        this.accioAnterior = orientacio;
         actualitzarPercepcio();
         this.main.notificar("Repintar");
     }
@@ -65,10 +76,12 @@ public class Robot {
                 caselles[i] = main.getMapa().getCasella(this.X + vX[i], this.Y + vY[i]);
             }
         }
+        //actualitza percepcio_anterior
+        if (percepcio_actual != null) percepcio_anterior = percepcio_actual;
         percepcio_actual = caselles;
     }
 
-    public int getOrientacio() {
+    public Direccions getOrientacio() {
         return this.orientacio;
     }
 
@@ -80,6 +93,21 @@ public class Robot {
         return this.Y;
     }
 
+    public Casella[] getPercepcionsActuals() {
+        return this.percepcio_actual;
+    }
+
+    public Casella[] getPercepcionsAnteriors() {
+        return this.percepcio_anterior;
+    }
+
+    public Direccions getAccioAnterior() {
+        return this.accioAnterior;
+    }
+
+    /*
+     * Debugging imprimeix percepcions
+     */
     public void actualitzarPercepcio() {
         percebre();
         printPercepcionsActuals();

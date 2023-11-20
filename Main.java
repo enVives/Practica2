@@ -2,6 +2,7 @@ public class Main implements InterficiePrincipal {
     private Mapa mapa;
     private Robot robot;
     private Interficie interficie;
+    private Accions accions;
 
     private static int mapSize = 7;
     private static int waitTime = 500;
@@ -14,7 +15,9 @@ public class Main implements InterficiePrincipal {
         this.mapa = new Mapa(this, mapSize);
         this.robot = new Robot(this);
         this.interficie = new Interficie(this);
+        this.accions = new Accions(this);
         interficie.mostrar();
+        accions.start();
     }
 
     public Mapa getMapa() {
@@ -62,7 +65,7 @@ public class Main implements InterficiePrincipal {
             this.robot.girar();
             this.interficie.repintar();
         }else if(msg.contentEquals("avancar")){
-            this.robot.avancar();
+            this.robot.avancar(Direccions.SUD);
         }
     }
 

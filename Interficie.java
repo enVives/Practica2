@@ -286,22 +286,22 @@ public class Interficie extends JFrame {
             int xRobot = main.getRobot().getX();
             int yRobot = main.getRobot().getY();
             switch(main.getRobot().getOrientacio()) {
-                case 1:
+                case ESTE:
                     triangle.addPoint(trianglePoints[0].x + lineSize*xRobot,trianglePoints[0].y + lineSize*yRobot);
                     triangle.addPoint(trianglePoints[1].x + lineSize*xRobot,trianglePoints[1].y + lineSize*yRobot);
                     triangle.addPoint(trianglePoints[2].x + lineSize*xRobot,trianglePoints[2].y + lineSize*yRobot);
                     break;
-                case 2:
+                case NORTE:
                     triangle.addPoint(trianglePoints[1].x + lineSize*xRobot, trianglePoints[1].y + lineSize*yRobot);
                     triangle.addPoint((lineSize - trianglePoints[1].x) + lineSize*xRobot, trianglePoints[1].y + lineSize*yRobot);
                     triangle.addPoint(lineSize/2 + lineSize*xRobot,(lineSize-trianglePoints[2].x) + lineSize*yRobot);
                     break;
-                case 3:
+                case OESTE:
                     triangle.addPoint((lineSize-trianglePoints[0].x) + lineSize*xRobot,(trianglePoints[0].y) + lineSize*yRobot);
                     triangle.addPoint((lineSize-trianglePoints[1].x) + lineSize*xRobot,(trianglePoints[1].y) + lineSize*yRobot);
                     triangle.addPoint((lineSize-trianglePoints[2].x) + lineSize*xRobot,(trianglePoints[2].y) + lineSize*yRobot);
                     break;
-                case 4:
+                case SUD:
                     triangle.addPoint(trianglePoints[1].x + lineSize*xRobot, lineSize - trianglePoints[1].y + lineSize*yRobot);
                     triangle.addPoint((lineSize - trianglePoints[1].x) + lineSize*xRobot, lineSize - trianglePoints[1].y + lineSize*yRobot);
                     triangle.addPoint(lineSize/2 + lineSize*xRobot,trianglePoints[2].x + lineSize*yRobot);
