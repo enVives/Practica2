@@ -65,7 +65,7 @@ public class Main implements InterficiePrincipal {
             this.robot.girar();
             this.interficie.repintar();
         }else if(msg.contentEquals("avancar")){
-            this.robot.avancar(Direccions.SUD);
+            this.robot.avancar(this.robot.getOrientacio());
         }
     }
 

@@ -2,8 +2,7 @@ public class Robot {
     private Main main;
 
     private Casella[] BC;
-    private Casella[] percepcio_actual; // 0:EST 1:NORD 2:OEST 3:SUD
-    private Casella[] percepcio_anterior;
+    private Casella percepcio_actual;
     private Direccions accioAnterior;
 
     private Direccions orientacio; // 1:EST 2:NORD 3:OEST 4:SUD
@@ -14,29 +13,33 @@ public class Robot {
     public Robot(Main main) {
         this.main = main;
         this.orientacio = Direccions.ESTE;
-        // this.X = 0;
-        // this.Y = main.getMapSize() - 1;
-        this.X = 3;
-        this.Y = 5;
-        this.BC = new Casella[main.getMapSize()*main.getMapSize()];
-        // PROVES PER PERCEBRE
-        actualitzarPercepcio();
+        this.X = 0;
+        this.Y = main.getMapSize() - 1;
+        this.BC = new Casella[main.getMapSize() * main.getMapSize()];
     }
 
     public void girar() {
         if (this.orientacio == Direccions.SUD) {
             this.orientacio = Direccions.ESTE;
-        } else if (this.orientacio == Direccions.ESTE){
+        } else if (this.orientacio == Direccions.ESTE) {
             this.orientacio = Direccions.NORTE;
-        } else if (this.orientacio == Direccions.NORTE){
+        } else if (this.orientacio == Direccions.NORTE) {
             this.orientacio = Direccions.OESTE;
-        } else if (this.orientacio == Direccions.OESTE){
+        } else if (this.orientacio == Direccions.OESTE) {
             this.orientacio = Direccions.SUD;
         }
     }
 
+    public boolean potAvancar(Direccions dir) {
+        int mapSize = this.main.getMapSize();
+        return (this.X + dir.movX < mapSize && this.X + dir.movX >= 0
+                && this.Y + dir.movY < mapSize && this.Y + dir.movY >= 0);
+    }
+
     // Despres de cada avancar s'ha de repintar el tauler
     public void avancar(Direccions dir) {
+        //aumentam visites
+        this.BC[this.Y * this.main.getMapSize() + this.X].augmentaVisites();
         while (this.orientacio != dir) {
             girar();
         }
@@ -56,29 +59,47 @@ public class Robot {
             default:
                 System.out.println("ORIENTACIO NO POSIBLE");
         }
-        // PROVES PER PERCEBRE
         this.accioAnterior = orientacio;
-        actualitzarPercepcio();
         this.main.notificar("Repintar");
     }
 
     public void collirTresor() {
         this.tresor++;
+        // TODO: gestio llevar des mapa
     }
 
-    public void percebre() {
-        int vX[] = { 1, 0, -1, 0 };
-        int vY[] = { 0, -1, 0, 1 };
-        Casella caselles[] = new Casella[4];
-        for (int i = 0; i < 4; i++) {
-            if (this.X + vX[i] >= 0 && this.X + vX[i] < main.getMapSize()
-                    && this.Y + vY[i] >= 0 && this.Y + vY[i] < main.getMapSize()) {
-                caselles[i] = main.getMapa().getCasella(this.X + vX[i], this.Y + vY[i]);
+    public Casella percebre() {
+        // Nomes podem utilitzar hedor brisa i resplandor!
+        Casella cas = this.main.getMapa().getCasella(this.X, this.Y);
+        this.percepcio_actual = cas;
+        return cas;
+    }
+
+    public boolean estaBC(Direccions dir) {
+        return (this.BC[(this.Y + dir.movY) * this.main.getMapSize() + this.X + dir.movX] != null);
+    }
+
+    public boolean estaBC(int X, int Y) {
+        return (this.BC[Y * this.main.getMapSize() + X] == null);
+    }
+
+    public boolean estaBC(Direccions dir, int X, int Y) {
+        return (this.BC[(Y + dir.movY) * this.main.getMapSize() + X + dir.movX] == null);
+    }
+
+    // Actualitzam BC desde la casella a la que ens trobam
+    public void afegirBC(Casella cas) {
+        if (this.X >= 0 && this.X < this.main.getMapSize() && this.Y >= 0 && this.Y < this.main.getMapSize()) {
+            int posArray = this.Y * this.main.getMapSize() + this.X;
+            if (this.BC[posArray] == null) {
+                System.out.println("Afegit: " + posArray);
+                this.BC[posArray] = cas;
             }
         }
-        //actualitza percepcio_anterior
-        if (percepcio_actual != null) percepcio_anterior = percepcio_actual;
-        percepcio_actual = caselles;
+    }
+
+    public int getVisitesBC(Direccions dir) {
+        return this.BC[(this.Y + dir.movY) * this.main.getMapSize() + this.X + dir.movX].getVisitada();
     }
 
     public Direccions getOrientacio() {
@@ -93,16 +114,16 @@ public class Robot {
         return this.Y;
     }
 
-    public Casella[] getPercepcionsActuals() {
+    public Casella getPercepcionsActuals() {
         return this.percepcio_actual;
-    }
-
-    public Casella[] getPercepcionsAnteriors() {
-        return this.percepcio_anterior;
     }
 
     public Direccions getAccioAnterior() {
         return this.accioAnterior;
+    }
+
+    public Casella[] getBC() {
+        return this.BC;
     }
 
     /*
@@ -110,13 +131,7 @@ public class Robot {
      */
     public void actualitzarPercepcio() {
         percebre();
-        printPercepcionsActuals();
-    }
-
-    public void printPercepcionsActuals() {
-        for (Casella casella : percepcio_actual) {
-            System.out.println(casella);
-        }
+        // printPercepcionsActuals();
     }
 
 }

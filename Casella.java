@@ -12,7 +12,7 @@ public class Casella {
         this.precipicio = precipicio;
     }
 
-    public void setVisitada() {
+    public void augmentaVisites() {
         this.visites++;
     }
 
@@ -63,6 +63,10 @@ public class Casella {
 
     public void setHedor(boolean hedor) {
         this.hedor = hedor;
+    }
+
+    public boolean esPerillos() {
+        return this.brisa || this.hedor;
     }
 
     @Override
