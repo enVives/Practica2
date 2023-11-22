@@ -145,4 +145,13 @@ public class Mapa {
         actualitzar_caselles();
     }
 
+    public void imprimirMapa() {
+        for (int i = 0; i < disposicio.length; i++) {
+            for (int j = 0; j < disposicio.length; j++) {
+                System.out.print(disposicio[i][j].getVisitada() + " ");
+            }
+            System.out.println();
+        }
+    }
+
 }

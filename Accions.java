@@ -1,11 +1,4 @@
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 public class Accions extends Thread {
     private Main main;
@@ -50,7 +43,7 @@ public class Accions extends Thread {
             int presents = 0;
 
             try {
-                sleep(125);
+                sleep(25);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -61,34 +54,18 @@ public class Accions extends Thread {
                 // 2. SI HI HA MES D'UNA QUE NO ESTA A BC ANAM EN FUNCIO PRIORITAT AVANCAR
                 // 3. SI TOTES ESTAN A BC ANAM A LA MENYS VISITADA
                 // 4. SI TOTES ESTAN IGUAL DE VISITADES ANAM EN FUNCIO PRIORITAT
-                if (robot.potAvancar(Direccions.ESTE)) {
-                    potAvancar[Direccions.ESTE.valor] = true;
-                    if (robot.estaBC(Direccions.ESTE)) {
-                        presentBC[Direccions.ESTE.valor] = true;
-                        presents++;
+                Direccions[] direcciones = Direccions.values();
+
+                for (Direccions direccion : direcciones) {
+                    if (robot.potAvancar(direccion)) {
+                        potAvancar[direccion.valor] = true;
+                        if (robot.estaBC(direccion)) {
+                            presentBC[direccion.valor] = true;
+                            presents++;
+                        }
                     }
                 }
-                if (robot.potAvancar(Direccions.NORTE)) {
-                    potAvancar[Direccions.NORTE.valor] = true;
-                    if (robot.estaBC(Direccions.NORTE)) {
-                        presentBC[Direccions.NORTE.valor] = true;
-                        presents++;
-                    }
-                }
-                if (robot.potAvancar(Direccions.OESTE)) {
-                    potAvancar[Direccions.OESTE.valor] = true;
-                    if (robot.estaBC(Direccions.OESTE)) {
-                        presentBC[Direccions.OESTE.valor] = true;
-                        presents++;
-                    }
-                }
-                if (robot.potAvancar(Direccions.SUD)) {
-                    potAvancar[Direccions.SUD.valor] = true;
-                    if (robot.estaBC(Direccions.SUD)) {
-                        presentBC[Direccions.SUD.valor] = true;
-                        presents++;
-                    }
-                }
+
                 if (presents == 3) {
                     // Ves a la que no esta present a la BC
                     // System.out.println("CAS 1");
@@ -110,7 +87,8 @@ public class Accions extends Thread {
                     int botades = 0;
                     for (int i = 0; i < 4; i++) {
                         if (robot.potAvancar(Direccions.values()[i])) {
-                            pairs[i-botades] = new Pair(robot.getVisitesBC(Direccions.values()[i]), Direccions.values()[i]);
+                            pairs[i - botades] = new Pair(robot.getVisitesBC(Direccions.values()[i]),
+                                    Direccions.values()[i]);
                         } else {
                             botades++;
                         }
@@ -139,7 +117,8 @@ public class Accions extends Thread {
                     int botades = 0;
                     for (int i = 0; i < 4; i++) {
                         if (robot.potAvancar(Direccions.values()[i])) {
-                            pairs[i-botades] = new Pair(robot.getVisitesBC(Direccions.values()[i]), Direccions.values()[i]);
+                            pairs[i - botades] = new Pair(robot.getVisitesBC(Direccions.values()[i]),
+                                    Direccions.values()[i]);
                         } else {
                             botades++;
                         }
