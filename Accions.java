@@ -1,13 +1,36 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class Accions extends Thread {
     private Main main;
     private boolean seguir = true;
     private Robot robot;
+
+    private class Pair implements Comparable<Pair> {
+        public int visites;
+        public Direccions dir;
+
+        public Pair(int vis, Direccions dir) {
+            this.visites = vis;
+            this.dir = dir;
+        }
+
+        @Override
+        public int compareTo(Pair other) {
+            int compareVisites = Integer.compare(this.visites, other.visites);
+            if (compareVisites == 0) {
+                return this.dir.compareTo(other.dir);
+            }
+
+            return compareVisites;
+        }
+    }
 
     public Accions(Main main) {
         this.main = main;
@@ -25,6 +48,12 @@ public class Accions extends Thread {
             boolean presentBC[] = new boolean[4];
             boolean potAvancar[] = new boolean[4];
             int presents = 0;
+
+            try {
+                sleep(125);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             if (!percepcions_actuals.esPerillos()) {
                 // CONSEGUIM INFORMACIO DE LES CASELLES ANAM A LA QUE MES ENS CONVENGUI
@@ -62,25 +91,80 @@ public class Accions extends Thread {
                 }
                 if (presents == 3) {
                     // Ves a la que no esta present a la BC
-                    System.out.println("CAS 1");
+                    // System.out.println("CAS 1");
+                    boolean avancat = false;
                     for (int i = 0; i < presentBC.length; i++) {
                         if (!presentBC[i]) {
-                            robot.avancar(Direccions.values()[i]);
+                            if (robot.potAvancar(Direccions.values()[i])) {
+                                robot.avancar(Direccions.values()[i]);
+                                // System.out.println("ADVANCED!");
+                                avancat = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (avancat)
+                        continue;
+                    // System.out.println("ADVANCEDNT");
+                    Pair pairs[] = new Pair[3];
+                    int botades = 0;
+                    for (int i = 0; i < 4; i++) {
+                        if (robot.potAvancar(Direccions.values()[i])) {
+                            pairs[i-botades] = new Pair(robot.getVisitesBC(Direccions.values()[i]), Direccions.values()[i]);
+                        } else {
+                            botades++;
+                        }
+                    }
+                    Arrays.sort(pairs);
+                    for (int i = 0; i < pairs.length - botades; i++) {
+                        if (robot.potAvancar(pairs[i].dir)) {
+                            robot.avancar(pairs[i].dir);
                             break;
                         }
                     }
                 } else if (presents != 4 && presents != 0) { // presents == 1 || 2
                     // Ves en funcio de la prioritat establerta llevant aquelles que estan BC
                     System.out.println("CAS 2");
+                    boolean avancat = false;
                     for (int i = 0; i < potAvancar.length; i++) {
                         if (potAvancar[i] && !presentBC[i]) {
                             robot.avancar(Direccions.values()[i]);
+                            avancat = true;
+                            break;
+                        }
+                    }
+                    if (avancat)
+                        continue;
+                    Pair pairs[] = new Pair[presents];
+                    int botades = 0;
+                    for (int i = 0; i < 4; i++) {
+                        if (robot.potAvancar(Direccions.values()[i])) {
+                            pairs[i-botades] = new Pair(robot.getVisitesBC(Direccions.values()[i]), Direccions.values()[i]);
+                        } else {
+                            botades++;
+                        }
+                    }
+                    Arrays.sort(pairs);
+                    for (int i = 0; i < pairs.length; i++) {
+                        if (robot.potAvancar(pairs[i].dir)) {
+                            robot.avancar(pairs[i].dir);
                             break;
                         }
                     }
                 } else if (presents == 4) { // Totes caselles a BC
-                    //Pasa que no mira que se pugui efectuar es moviment
-                    //TODO: implementar aquest
+                    // Pasa que no mira que se pugui efectuar es moviment
+                    System.out.println("CAS 3");
+                    Pair pairs[] = new Pair[4];
+                    for (int i = 0; i < pairs.length; i++) {
+                        pairs[i] = new Pair(robot.getVisitesBC(Direccions.values()[i]), Direccions.values()[i]);
+                    }
+                    Arrays.sort(pairs);
+                    for (int i = 0; i < pairs.length; i++) {
+                        if (robot.potAvancar(pairs[i].dir)) {
+                            robot.avancar(pairs[i].dir);
+                            break;
+                        }
+                    }
                 } else if (presents == 0) { // Cap casella a BC
                     // Ves en funcio de la prioritat establerta
                     System.out.println("CAS 4 ");
@@ -91,15 +175,8 @@ public class Accions extends Thread {
                         }
                     }
                 }
-
             } else {
                 // PER IMPLEMENTAR PERILLOSITAT
-
-            }
-            try {
-                sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
     }

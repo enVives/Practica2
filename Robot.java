@@ -38,27 +38,14 @@ public class Robot {
 
     // Despres de cada avancar s'ha de repintar el tauler
     public void avancar(Direccions dir) {
-        //aumentam visites
+        // aumentam visites
         this.BC[this.Y * this.main.getMapSize() + this.X].augmentaVisites();
         while (this.orientacio != dir) {
             girar();
         }
-        switch (dir) {
-            case ESTE:
-                this.X++;
-                break;
-            case NORTE:
-                this.Y--;
-                break;
-            case OESTE:
-                this.X--;
-                break;
-            case SUD:
-                this.Y++;
-                break;
-            default:
-                System.out.println("ORIENTACIO NO POSIBLE");
-        }
+        System.out.printf("X: %d --> %d ; Y: %d --> %d\n", this.X, this.X + dir.movX, this.Y, this.Y + dir.movY);
+        this.X += dir.movX;
+        this.Y += dir.movY;
         this.accioAnterior = orientacio;
         this.main.notificar("Repintar");
     }
@@ -92,7 +79,6 @@ public class Robot {
         if (this.X >= 0 && this.X < this.main.getMapSize() && this.Y >= 0 && this.Y < this.main.getMapSize()) {
             int posArray = this.Y * this.main.getMapSize() + this.X;
             if (this.BC[posArray] == null) {
-                System.out.println("Afegit: " + posArray);
                 this.BC[posArray] = cas;
             }
         }
