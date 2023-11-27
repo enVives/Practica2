@@ -65,7 +65,7 @@ public class Interficie extends JFrame {
 
         public panellBotons(Main main) {
             this.main = main;
-            setLayout(new GridLayout(8, 1));
+            setLayout(new GridLayout(6, 1));
 
             posarPrecipici = new JButton("Precipici");
             posarMonstruo = new JButton("Monstre");
@@ -76,12 +76,6 @@ public class Interficie extends JFrame {
             activarRobot = new JButton("ATURAT");
 
             //PROVES
-            girar = new JButton("GIRAR SENTIT");
-            avancar = new JButton("AVANCAR");
-            girar.addActionListener(this);
-            avancar.addActionListener(this);
-            this.add(girar);
-            this.add(avancar);
 
             tempsAccio.addActionListener(this);
             llargMapa.addActionListener(this);
@@ -102,7 +96,7 @@ public class Interficie extends JFrame {
         public void actionPerformed(ActionEvent arg0) {
             if (arg0.getSource() == activarRobot) {
                 JButton boto = (JButton) arg0.getSource();
-                main.notificar("Començar");
+                main.notificar("Comencar");
                 if (boto.getText().equals("ATURAT")) {
                     boto.setText("ACTIVAT");
                 } else {
@@ -138,10 +132,6 @@ public class Interficie extends JFrame {
                 torn = 2;
             } else if (arg0.getSource() == posarTresor) {
                 torn = 3;
-            } else if (arg0.getSource() == avancar) {
-                main.notificar("avancar");
-            } else if (arg0.getSource() == girar) {
-                main.notificar("girar");
             }
         }
     }

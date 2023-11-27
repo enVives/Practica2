@@ -17,7 +17,6 @@ public class Main implements InterficiePrincipal {
         this.interficie = new Interficie(this);
         this.accions = new Accions(this);
         interficie.mostrar();
-        accions.start();
     }
 
     public Mapa getMapa() {
@@ -59,13 +58,10 @@ public class Main implements InterficiePrincipal {
         if(msg.contentEquals("Canviarll")){
             reiniciar_Mapa();
             this.interficie.repintar();
-        }else if(msg.contentEquals("Repintar")){
+        } else if(msg.contentEquals("Repintar")){
             this.interficie.repintar();
-        }else if(msg.contentEquals("girar")){
-            this.robot.girar();
-            this.interficie.repintar();
-        }else if(msg.contentEquals("avancar")){
-            this.robot.avancar(this.robot.getOrientacio());
+        } else if(msg.contentEquals("Comencar")){
+            accions.start();
         }
     }
 

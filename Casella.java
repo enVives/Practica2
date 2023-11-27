@@ -28,12 +28,16 @@ public class Casella {
         this.monstruo = monstruo;
     }
 
-    public Casella(){
-        hedor = false;
-        brisa = false;
-        resplandor = false;
-        monstruo = false;
-        precipicio = false;
+    public Casella() {}
+
+    public Casella(char lletra){
+        if (lletra == 'M') {
+            this.monstruo = true;
+        } else if (lletra == 'P') {
+            this.precipicio = true;
+        } else if (lletra == 'T') {
+            this.resplandor = true;
+        }
     }
 
     public void llevar_percepcions(){

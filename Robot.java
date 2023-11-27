@@ -30,10 +30,71 @@ public class Robot {
         }
     }
 
+    private Casella obtenirCasella(Direccions dir) {
+        return this.BC[(this.Y + dir.movY) * this.main.getMapSize() + this.X + dir.movX];
+    }
+
+    private Casella obtenirCasella(int casX, int casY) {
+        return this.BC[casY * this.main.getMapSize() + casX];
+    }
+
     public boolean potAvancar(Direccions dir) {
         int mapSize = this.main.getMapSize();
-        return (this.X + dir.movX < mapSize && this.X + dir.movX >= 0
-                && this.Y + dir.movY < mapSize && this.Y + dir.movY >= 0);
+        if (!(this.X + dir.movX < mapSize && this.X + dir.movX >= 0
+            && this.Y + dir.movY < mapSize && this.Y + dir.movY >= 0)) return false;
+        
+        //Si esta tauler i no hi ha perill avança
+        if(!this.percepcio_actual.esPerillos()) {
+            return true;
+        }
+        //Si hi ha perill mira i sabem que es monstre o precipici no avanca
+        if (estaBC(dir)) {
+            if (obtenirCasella(dir).isMonstruo() || obtenirCasella(dir).isPrecipicio()) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        //Si hi ha perill i no sabem si es monstre o precipici intentam esbrinar
+        //Si no podem esbrinar no avancam
+        Casella[] colindants = getColindats(dir);
+        if(!estaBC(dir)) {
+            if (isPrecipici(colindants)) {
+                this.BC[(this.Y + dir.movY) * this.main.getMapSize() + this.X + dir.movX] = new Casella('P');
+                return false;
+            }
+            if (isMonstre(colindants)) {
+                this.BC[(this.Y + dir.movY) * this.main.getMapSize() + this.X + dir.movX] = new Casella('M');
+                return false;
+            }
+            //no podem assegurar que sigui segur
+            if (!totesABC(colindants)) return false;
+        }
+        return true;
+    }
+
+    private boolean totesABC(Casella[] casellas) {
+        for (int i = 0; i < casellas.length; i++) {
+            if (casellas[i] == null) return false;
+        }
+        return true;
+    }
+
+    private boolean isMonstre(Casella[] colindants) {
+        for (int i = 0; i < colindants.length; i++) {
+            if (colindants[i] == null) return false;
+            if (!colindants[i].isHedor()) return false;
+        }
+        return true;
+    }
+
+    private boolean isPrecipici(Casella[] colindants) {
+        for (int i = 0; i < colindants.length; i++) {
+            if (colindants[i] == null) return false;
+            if (!colindants[i].isBrisa()) return false;
+        }
+        return true;
     }
 
     // Despres de cada avancar s'ha de repintar el tauler
@@ -43,7 +104,8 @@ public class Robot {
         while (this.orientacio != dir) {
             girar();
         }
-        System.out.printf("X: %d --> %d ; Y: %d --> %d\n", this.X, this.X + dir.movX, this.Y, this.Y + dir.movY);
+        // System.out.printf("X: %d --> %d ; Y: %d --> %d\n", this.X, this.X + dir.movX,
+        // this.Y, this.Y + dir.movY);
         this.X += dir.movX;
         this.Y += dir.movY;
         this.accioAnterior = orientacio;
@@ -82,6 +144,33 @@ public class Robot {
                 this.BC[posArray] = cas;
             }
         }
+    }
+
+    public Casella[] getColindats(Direccions dir) {
+        //esquina 2 , canto 3, normal 4
+        Casella caselles[];
+        int colindants, casX, casY;
+        int mapSize = this.main.getMapSize() - 1;
+        casX = this.X + dir.movX;
+        casY = this.Y + dir.movY;
+        if ((casX == 0 || casX == mapSize) && (casY == 0 || casY == mapSize)) {
+            colindants = 2;
+        } else if((casX == 0 || casX == mapSize) || (casY == 0 || casY == mapSize)) {
+            colindants = 3;
+        } else {
+            colindants = 4;
+        }
+        // System.out.printf("X: %d, Y: %d, COLINDANTS: %d\n", casX,casY,colindants);
+        caselles = new Casella[colindants];
+        int ficats = 0;
+        for (Direccions direccion : Direccions.values()) {
+            if (casX +direccion.movX>= 0 && casX+direccion.movX < mapSize
+                && casY+direccion.movY >= 0 && casY+direccion.movY < mapSize) {
+                    caselles[ficats] = this.obtenirCasella(casX, casY);
+                    ficats++;
+            }
+        }
+        return caselles;
     }
 
     public int getVisitesBC(Direccions dir) {
