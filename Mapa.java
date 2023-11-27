@@ -18,7 +18,7 @@ public class Mapa {
 
         for(int i =0;i<size;i++){
             for(int j = 0; j<size;j++){
-                disposicio[i][j] = new Casella();
+                disposicio[i][j] = new Casella(i,j);
             }
         }
     }

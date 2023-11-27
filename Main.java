@@ -3,6 +3,7 @@ public class Main implements InterficiePrincipal {
     private Robot robot;
     private Interficie interficie;
     private Accions accions;
+    private Proves proves; //d'un en un
 
     private static int mapSize = 7;
     private static int waitTime = 500;
@@ -16,6 +17,7 @@ public class Main implements InterficiePrincipal {
         this.robot = new Robot(this);
         this.interficie = new Interficie(this);
         this.accions = new Accions(this);
+        this.proves = new Proves(this);
         interficie.mostrar();
     }
 
@@ -62,6 +64,8 @@ public class Main implements InterficiePrincipal {
             this.interficie.repintar();
         } else if(msg.contentEquals("Comencar")){
             accions.start();
+        } else if(msg.contentEquals("Proves")) {
+            proves.prova();
         }
     }
 

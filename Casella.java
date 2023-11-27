@@ -2,6 +2,7 @@ public class Casella {
 
     private boolean hedor,brisa,resplandor;
     private boolean monstruo,precipicio;
+    public int x,y; //per debugging
     private int visites = 0;
 
     public boolean isPrecipicio() {
@@ -28,7 +29,10 @@ public class Casella {
         this.monstruo = monstruo;
     }
 
-    public Casella() {}
+    public Casella(int X, int Y) {
+        this.x = X;
+        this.y = Y;
+    }
 
     public Casella(char lletra){
         if (lletra == 'M') {
