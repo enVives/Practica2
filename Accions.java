@@ -1,8 +1,11 @@
 import java.util.Arrays;
+import java.util.Stack;
 
 public class Accions extends Thread {
     private boolean seguir = true;
     private Robot robot;
+    private Main main;
+    Stack<Direccions> stack = new Stack<Direccions>();
 
     private class Pair implements Comparable<Pair> {
         public int visites;
@@ -26,6 +29,7 @@ public class Accions extends Thread {
 
     public Accions(Main main) {
         this.robot = main.getRobot();
+        this.main = main;
     }
 
     // PRIORITAT D'AVANCAR EST --> NORD --> OEST --> SUD
@@ -41,14 +45,29 @@ public class Accions extends Thread {
             int presents = 0;
 
             try {
-                sleep(3000);
+                sleep(150);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            //PROVES
-            if (percepcions_actuals.isMonstruo() || percepcions_actuals.isPrecipicio()) System.out.println("XDDD");
-            //PROVES
 
+            if (accio_anterior != null) {
+                stack.push(accio_anterior.contrari());
+            }
+            if (percepcions_actuals.isResplandor()) {
+                main.getMapa().put_tesoro(robot.getX(), robot.getY());
+                Direccions accioActual = stack.isEmpty() ? null : stack.pop();
+
+                while (accioActual != null) {
+                    robot.avancar(accioActual);
+                    try {
+                        sleep(400);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    accioActual = stack.isEmpty() ? null : stack.pop();
+                }
+                return;
+            }
             // if (!percepcions_actuals.esPerillos()) {
             // CONSEGUIM INFORMACIO DE LES CASELLES ANAM A LA QUE MES ENS CONVENGUI
             // 1. SI HI HA NOMES UNA QUE NO ESTIGUI A BC ANAM AQUELLA
@@ -69,13 +88,11 @@ public class Accions extends Thread {
 
             if (presents == 3) {
                 // Ves a la que no esta present a la BC
-                System.out.println("CAS 1");
                 boolean avancat = false;
                 for (int i = 0; i < presentBC.length; i++) {
                     if (!presentBC[i]) {
                         if (robot.potAvancar(Direccions.values()[i])) {
                             robot.avancar(Direccions.values()[i]);
-                            // System.out.println("ADVANCED!");
                             avancat = true;
                             break;
                         }
@@ -83,7 +100,6 @@ public class Accions extends Thread {
                 }
                 if (avancat)
                     continue;
-                // System.out.println("ADVANCEDNT");
                 Pair pairs[] = new Pair[3];
                 int botades = 0;
                 for (int i = 0; i < 4; i++) {
@@ -103,7 +119,6 @@ public class Accions extends Thread {
                 }
             } else if (presents != 4 && presents != 0) { // presents == 1 || 2
                 // Ves en funcio de la prioritat establerta llevant aquelles que estan BC
-                System.out.println("CAS 2");
                 boolean avancat = false;
                 for (int i = 0; i < potAvancar.length; i++) {
                     if (potAvancar[i] && !presentBC[i]) {

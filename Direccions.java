@@ -13,4 +13,18 @@ public enum Direccions {
         this.movX = x;
         this.movY = y;
     }
+
+    public Direccions contrari() {
+        switch (this.valor) {
+            case 0: 
+                return Direccions.OESTE;
+            case 1: 
+                return Direccions.SUD;
+            case 2:
+                return Direccions.ESTE;
+            case 3:
+                return Direccions.NORTE;
+        }
+        return null;
+    }
 }

@@ -1,6 +1,8 @@
 import java.util.Arrays;
+import java.util.Stack;
 
 public class Proves {
+    private Main main;
     private boolean seguir = true;
     private Robot robot;
 
@@ -26,6 +28,7 @@ public class Proves {
 
     public Proves(Main main) {
         this.robot = main.getRobot();
+        this.main = main;
     }
 
     // PRIORITAT D'AVANCAR EST --> NORD --> OEST --> SUD
@@ -37,10 +40,6 @@ public class Proves {
         boolean presentBC[] = new boolean[4];
         boolean potAvancar[] = new boolean[4];
         int presents = 0;
-        // PROVES
-        if (percepcions_actuals.isMonstruo() || percepcions_actuals.isPrecipicio())
-            System.out.println("XDDD");
-        // PROVES
 
         // if (!percepcions_actuals.esPerillos()) {
         // CONSEGUIM INFORMACIO DE LES CASELLES ANAM A LA QUE MES ENS CONVENGUI

@@ -97,7 +97,7 @@ public class Interficie extends JFrame {
             if (arg0.getSource() == activarRobot) {
                 JButton boto = (JButton) arg0.getSource();
                 //main.notificar("Comencar");
-                main.notificar("Proves"); //de un en un
+                main.notificar("Comencar"); //de un en un
                 if (boto.getText().equals("ATURAT")) {
                     boto.setText("ACTIVAT");
                 } else {
