@@ -75,8 +75,6 @@ public class Interficie extends JFrame {
             llargMapa = new JButton("Canviar LLargària Mapa");
             activarRobot = new JButton("ATURAT");
 
-            //PROVES
-
             tempsAccio.addActionListener(this);
             llargMapa.addActionListener(this);
             activarRobot.addActionListener(this);
@@ -96,8 +94,7 @@ public class Interficie extends JFrame {
         public void actionPerformed(ActionEvent arg0) {
             if (arg0.getSource() == activarRobot) {
                 JButton boto = (JButton) arg0.getSource();
-                //main.notificar("Comencar");
-                main.notificar("Comencar"); //de un en un
+                main.notificar("Comencar"); // de un en un
                 if (boto.getText().equals("ATURAT")) {
                     boto.setText("ACTIVAT");
                 } else {
@@ -114,8 +111,8 @@ public class Interficie extends JFrame {
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 }
-                main.notificar("Canviardelay");
             } else if (arg0.getSource() == llargMapa) {
+                main.getAccions().changeSeguir();
                 String entrada = JOptionPane.showInputDialog(this.getParent(), "Introdueix la llargaria desitjada");
                 if (entrada != null) {
                     try {
@@ -220,11 +217,11 @@ public class Interficie extends JFrame {
             g2.setStroke(new BasicStroke(3));
             g2.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
             lineSize = mapDimension / main.getMapa().getSize();
-            //es [2] es es que apunta
+            // es [2] es es que apunta
             Point trianglePoints[] = {
-                new Point(lineSize/5, (lineSize/6)*1),
-                new Point(lineSize/5, (lineSize/6)*5),
-                new Point((lineSize/5) * 4, (lineSize/6)*3)
+                    new Point(lineSize / 5, (lineSize / 6) * 1),
+                    new Point(lineSize / 5, (lineSize / 6) * 5),
+                    new Point((lineSize / 5) * 4, (lineSize / 6) * 3)
             };
             for (int i = 1; i <= main.getMapa().getSize(); i++) {
                 g2.drawLine(0, lineSize * i, mapDimension, lineSize * i);
@@ -255,47 +252,55 @@ public class Interficie extends JFrame {
                         g2.setColor(Color.BLACK);
 
                         if (casella.isBrisa()) {
-                            g2.drawString("Brisa", (lineSize * i)+5, (lineSize * j)+20 + desplx);
+                            g2.drawString("Brisa", (lineSize * i) + 5, (lineSize * j) + 20 + desplx);
                             desplx += (lineSize / 4);
                         }
 
                         if (casella.isHedor()) {
-                            g2.drawString("Hedor", (lineSize * i)+5, (lineSize * j)+20 + desplx);
+                            g2.drawString("Hedor", (lineSize * i) + 5, (lineSize * j) + 20 + desplx);
                         }
                         // if(casella.isRobot()){
-                        //     g2.setColor(Color.RED); // pinta bolla
-                        //     int radio = lineSize / 4;
-                        //     g2.fillOval(((lineSize * i)+ lineSize / 2) - radio, ((lineSize * j)+ lineSize / 2) - radio, radio * 2, radio * 2);
+                        // g2.setColor(Color.RED); // pinta bolla
+                        // int radio = lineSize / 4;
+                        // g2.fillOval(((lineSize * i)+ lineSize / 2) - radio, ((lineSize * j)+ lineSize
+                        // / 2) - radio, radio * 2, radio * 2);
 
                         // }
 
                     }
                 }
             }
-            //Pintam robot
+            // Pintam robot
             Polygon triangle = new Polygon();
             int xRobot = main.getRobot().getX();
             int yRobot = main.getRobot().getY();
-            switch(main.getRobot().getOrientacio()) {
+            switch (main.getRobot().getOrientacio()) {
                 case ESTE:
-                    triangle.addPoint(trianglePoints[0].x + lineSize*xRobot,trianglePoints[0].y + lineSize*yRobot);
-                    triangle.addPoint(trianglePoints[1].x + lineSize*xRobot,trianglePoints[1].y + lineSize*yRobot);
-                    triangle.addPoint(trianglePoints[2].x + lineSize*xRobot,trianglePoints[2].y + lineSize*yRobot);
+                    triangle.addPoint(trianglePoints[0].x + lineSize * xRobot, trianglePoints[0].y + lineSize * yRobot);
+                    triangle.addPoint(trianglePoints[1].x + lineSize * xRobot, trianglePoints[1].y + lineSize * yRobot);
+                    triangle.addPoint(trianglePoints[2].x + lineSize * xRobot, trianglePoints[2].y + lineSize * yRobot);
                     break;
                 case NORTE:
-                    triangle.addPoint(trianglePoints[1].x + lineSize*xRobot, trianglePoints[1].y + lineSize*yRobot);
-                    triangle.addPoint((lineSize - trianglePoints[1].x) + lineSize*xRobot, trianglePoints[1].y + lineSize*yRobot);
-                    triangle.addPoint(lineSize/2 + lineSize*xRobot,(lineSize-trianglePoints[2].x) + lineSize*yRobot);
+                    triangle.addPoint(trianglePoints[1].x + lineSize * xRobot, trianglePoints[1].y + lineSize * yRobot);
+                    triangle.addPoint((lineSize - trianglePoints[1].x) + lineSize * xRobot,
+                            trianglePoints[1].y + lineSize * yRobot);
+                    triangle.addPoint(lineSize / 2 + lineSize * xRobot,
+                            (lineSize - trianglePoints[2].x) + lineSize * yRobot);
                     break;
                 case OESTE:
-                    triangle.addPoint((lineSize-trianglePoints[0].x) + lineSize*xRobot,(trianglePoints[0].y) + lineSize*yRobot);
-                    triangle.addPoint((lineSize-trianglePoints[1].x) + lineSize*xRobot,(trianglePoints[1].y) + lineSize*yRobot);
-                    triangle.addPoint((lineSize-trianglePoints[2].x) + lineSize*xRobot,(trianglePoints[2].y) + lineSize*yRobot);
+                    triangle.addPoint((lineSize - trianglePoints[0].x) + lineSize * xRobot,
+                            (trianglePoints[0].y) + lineSize * yRobot);
+                    triangle.addPoint((lineSize - trianglePoints[1].x) + lineSize * xRobot,
+                            (trianglePoints[1].y) + lineSize * yRobot);
+                    triangle.addPoint((lineSize - trianglePoints[2].x) + lineSize * xRobot,
+                            (trianglePoints[2].y) + lineSize * yRobot);
                     break;
                 case SUD:
-                    triangle.addPoint(trianglePoints[1].x + lineSize*xRobot, lineSize - trianglePoints[1].y + lineSize*yRobot);
-                    triangle.addPoint((lineSize - trianglePoints[1].x) + lineSize*xRobot, lineSize - trianglePoints[1].y + lineSize*yRobot);
-                    triangle.addPoint(lineSize/2 + lineSize*xRobot,trianglePoints[2].x + lineSize*yRobot);
+                    triangle.addPoint(trianglePoints[1].x + lineSize * xRobot,
+                            lineSize - trianglePoints[1].y + lineSize * yRobot);
+                    triangle.addPoint((lineSize - trianglePoints[1].x) + lineSize * xRobot,
+                            lineSize - trianglePoints[1].y + lineSize * yRobot);
+                    triangle.addPoint(lineSize / 2 + lineSize * xRobot, trianglePoints[2].x + lineSize * yRobot);
                     break;
                 default:
             }

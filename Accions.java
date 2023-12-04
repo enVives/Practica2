@@ -2,9 +2,10 @@ import java.util.Arrays;
 import java.util.Stack;
 
 public class Accions extends Thread {
-    private boolean seguir = true;
+    private boolean seguir = false;
     private Robot robot;
     private Main main;
+    private int tresors = 0;
     Stack<Direccions> stack = new Stack<Direccions>();
 
     private class Pair implements Comparable<Pair> {
@@ -32,10 +33,15 @@ public class Accions extends Thread {
         this.main = main;
     }
 
+    public boolean changeSeguir() {
+        this.seguir = !this.seguir;
+        return this.seguir;
+    }
+
     // PRIORITAT D'AVANCAR EST --> NORD --> OEST --> SUD
     @Override
     public void run() {
-        while (seguir) {
+        while (seguir && this.tresors != this.main.getMapa().getTresors()) {
             Casella percepcions_actuals = robot.percebre();
             robot.afegirBC(percepcions_actuals);
             Direccions accio_anterior = robot.getAccioAnterior();
@@ -45,7 +51,7 @@ public class Accions extends Thread {
             int presents = 0;
 
             try {
-                sleep(150);
+                sleep(this.main.getWaitTime());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -54,19 +60,9 @@ public class Accions extends Thread {
                 stack.push(accio_anterior.contrari());
             }
             if (percepcions_actuals.isResplandor()) {
-                main.getMapa().put_tesoro(robot.getX(), robot.getY());
-                Direccions accioActual = stack.isEmpty() ? null : stack.pop();
-
-                while (accioActual != null) {
-                    robot.avancar(accioActual);
-                    try {
-                        sleep(400);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    accioActual = stack.isEmpty() ? null : stack.pop();
-                }
-                return;
+                // Algo per llevar es tresor pintat
+                this.tresors++;
+                if(this.tresors == this.main.getMapa().getTresors()) continue;
             }
             // if (!percepcions_actuals.esPerillos()) {
             // CONSEGUIM INFORMACIO DE LES CASELLES ANAM A LA QUE MES ENS CONVENGUI
@@ -169,5 +165,16 @@ public class Accions extends Thread {
                 }
             }
         }
+        Direccions accioActual = stack.isEmpty() ? null : stack.pop();
+        while (accioActual != null) {
+            robot.avancar(accioActual);
+            try {
+                sleep(this.main.getWaitTime());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            accioActual = stack.isEmpty() ? null : stack.pop();
+        }
+        return;
     }
 }

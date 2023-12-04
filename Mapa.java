@@ -62,7 +62,7 @@ public class Mapa {
 
         for(int i =0;i<size;i++){
             for(int j = 0; j<size;j++){
-                disposicio[i][j].llevar_percepcions();;
+                disposicio[i][j].llevar_percepcions();
             }
         }
         for(int i =0;i<size;i++){
@@ -138,10 +138,10 @@ public class Mapa {
         }else if(disposicio[X][Y].isMonstruo()){
             put_monstruo(X,Y);
         }
-
+        
         disposicio[X][Y].setResplandor(!disposicio[X][Y].isResplandor());
 
-
+        this.ntesoros++;
         actualitzar_caselles();
     }
 
@@ -152,6 +152,10 @@ public class Mapa {
             }
             System.out.println();
         }
+    }
+
+    public int getTresors() {
+        return this.ntesoros;
     }
 
 }

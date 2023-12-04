@@ -68,6 +68,7 @@ public class Robot {
                 return false;
             }
             if (isMonstre(colindants)) {
+                // Accio matar fletxes ?
                 this.BC[(this.Y + dir.movY) * this.main.getMapSize() + this.X + dir.movX] = new Casella('M');
                 return false;
             }

@@ -30,6 +30,8 @@ public class Main implements InterficiePrincipal {
     }
 
     public void reiniciar_Mapa(){
+        this.robot = new Robot(this);
+        this.accions = new Accions(this);
         this.mapa = new Mapa(this, mapSize);
     }
 
@@ -54,16 +56,28 @@ public class Main implements InterficiePrincipal {
         waitTime = delay;
     }
 
+    public Accions getAccions() {
+        return this.accions;
+    }
 
     @Override
     public void notificar(String msg) {
         if(msg.contentEquals("Canviarll")){
             reiniciar_Mapa();
             this.interficie.repintar();
-        } else if(msg.contentEquals("Repintar")){
+        } else if (msg.contentEquals("Repintar")) {
             this.interficie.repintar();
-        } else if(msg.contentEquals("Comencar")){
-            accions.start();
+        } else if (msg.contentEquals("Comencar")) {
+            if (accions.changeSeguir()) {
+                accions.start();
+            } else {
+                try {
+                    accions.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                accions = new Accions(this);
+            }
         } else if(msg.contentEquals("Proves")) {
             proves.prova();
         }
