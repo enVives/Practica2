@@ -179,6 +179,7 @@ public class Accions extends Thread {
                 }
             }
         }
+        if (!seguir) return;
         Direccions accioActual = stack.isEmpty() ? null : stack.pop();
         while (accioActual != null) {
             robot.avancar(accioActual);
