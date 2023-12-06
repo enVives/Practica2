@@ -80,6 +80,11 @@ public class Main implements InterficiePrincipal {
             }
         } else if(msg.contentEquals("Proves")) {
             proves.prova();
+        }else if(msg.contentEquals("Reiniciar")){
+            interficie.setVisible(false);
+            interficie = new Interficie(this);
+            reiniciar_Mapa();
+            interficie.mostrar();
         }
     }
 

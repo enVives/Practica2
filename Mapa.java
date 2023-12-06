@@ -126,6 +126,19 @@ public class Mapa {
 
     }
 
+    public void mata_monstruo(int X, int Y){
+        if (X >= this.size || X < 0 || Y >= this.size || Y < 0) //si la casella es a fora no feim res
+            return;
+
+        if(disposicio[X][Y].isMonstruo()){
+            System.out.println("Has matat un monstre amb una fletxa");
+        }
+        disposicio[X][Y].setMonstruo(false);
+
+        actualitzar_caselles();
+
+    }
+
     public void put_tesoro(int X, int Y){
         if (X >= this.size || X < 0 || Y >= this.size || Y < 0)
             return;
@@ -139,9 +152,24 @@ public class Mapa {
             put_monstruo(X,Y);
         }
         
-        disposicio[X][Y].setResplandor(!disposicio[X][Y].isResplandor());
+        if(disposicio[X][Y].isResplandor()==true){
+          this.ntesoros--;
+          disposicio[X][Y].setResplandor(!disposicio[X][Y].isResplandor());  
+        }else{
+          this.ntesoros++; 
+          disposicio[X][Y].setResplandor(!disposicio[X][Y].isResplandor());
+        }
+        
 
-        this.ntesoros++;
+        
+        actualitzar_caselles();
+    }
+
+    public void recollir_tresor(int X, int Y){
+        if (X >= this.size || X < 0 || Y >= this.size || Y < 0)
+            return;
+
+        disposicio[X][Y].setResplandor(!disposicio[X][Y].isResplandor());
         actualitzar_caselles();
     }
 

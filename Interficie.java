@@ -17,11 +17,14 @@ public class Interficie extends JFrame {
     private Integer torn;
     private BufferedImage tresor;
     private BufferedImage monstre;
+    private boolean bloqueig;
+    private panellBotons botons;
 
     public Interficie(Main main) {
         super("Robot");
         this.main = main;
         torn = null;
+        bloqueig = false;
         try {
             tresor = ImageIO.read(new File("tresor.png"));
         } catch (IOException e) {
@@ -34,10 +37,12 @@ public class Interficie extends JFrame {
             System.out.println(e.toString());
         }
 
+
         this.setLayout(new BorderLayout());
         panellPintar = new panellMapa();
         this.add(panellPintar, BorderLayout.CENTER);
-        this.add(new panellBotons(main), BorderLayout.WEST);
+        botons = new panellBotons(main);
+        this.add(botons, BorderLayout.WEST);
         this.pack();
     }
 
@@ -50,6 +55,15 @@ public class Interficie extends JFrame {
         panellPintar.repaint();
     }
 
+    public void acabat(){
+            JOptionPane.showMessageDialog(Interficie.this, "Has Guanyat");
+            main.notificar("Reiniciar");
+        }
+
+    public void reiniciar_boto(){
+        botons.reiniciar_boto_aturat();
+    }
+
     private class panellBotons extends JPanel implements ActionListener {
 
         JButton tempsAccio;
@@ -60,16 +74,18 @@ public class Interficie extends JFrame {
         JButton posarTresor;
         JButton avancar;
         JButton girar;
+        JButton fletxa;
 
         private Main main;
 
         public panellBotons(Main main) {
             this.main = main;
-            setLayout(new GridLayout(6, 1));
+            setLayout(new GridLayout(7, 1));
 
             posarPrecipici = new JButton("Precipici");
             posarMonstruo = new JButton("Monstre");
             posarTresor = new JButton("Tresor"); // Pensar a veure si s'ha de posar un botó per el robot.
+            fletxa = new JButton("Fletxa");
 
             tempsAccio = new JButton("Canviar Temps d'Acció");
             llargMapa = new JButton("Canviar LLargària Mapa");
@@ -81,6 +97,7 @@ public class Interficie extends JFrame {
             posarMonstruo.addActionListener(this);
             posarPrecipici.addActionListener(this);
             posarTresor.addActionListener(this);
+            fletxa.addActionListener(this);
 
             this.add(activarRobot);
             this.add(tempsAccio);
@@ -88,48 +105,85 @@ public class Interficie extends JFrame {
             this.add(posarPrecipici);
             this.add(posarMonstruo);
             this.add(posarTresor);
+            this.add(fletxa);
+        }
+
+        public void reiniciar_boto_aturat(){
+            activarRobot.setText("ATURAT");
         }
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
             if (arg0.getSource() == activarRobot) {
                 JButton boto = (JButton) arg0.getSource();
-                main.notificar("Comencar"); // de un en un
                 if (boto.getText().equals("ATURAT")) {
-                    boto.setText("ACTIVAT");
+                    if(main.getMapa().getTresors() ==0){
+                        System.out.println("No podem arrancar si no hi ha cap tresor");
+                    }else{
+                      bloqueig = true;
+                      torn = null;
+                      boto.setText("ACTIVAT"); 
+                      main.notificar("Comencar"); // de un en un 
+                    }
+                    
                 } else {
+                    bloqueig = false;
                     boto.setText("ATURAT");
+                    main.notificar("Comencar"); // de un en un
                 }
             } else if (arg0.getSource() == tempsAccio) {
-                String entrada = JOptionPane.showInputDialog(this.getParent(), "Nou temps entre acció (ms)");
-                if (entrada != null) {
-                    try {
-                        int cifra = Integer.parseInt(entrada);
-                        this.main.setAccioDelay(cifra);
-                    } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(this.getParent(), "Introdueix només una xifra", "Error",
-                                JOptionPane.ERROR_MESSAGE);
+                if (!bloqueig) {
+                    String entrada = JOptionPane.showInputDialog(this.getParent(), "Nou temps entre acció (ms)");
+                    if (entrada != null) {
+                        try {
+                            int cifra = Integer.parseInt(entrada);
+                            this.main.setAccioDelay(cifra);
+                        } catch (NumberFormatException ex) {
+                            JOptionPane.showMessageDialog(this.getParent(), "Introdueix només una xifra", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
+
             } else if (arg0.getSource() == llargMapa) {
-                main.getAccions().changeSeguir();
-                String entrada = JOptionPane.showInputDialog(this.getParent(), "Introdueix la llargaria desitjada");
-                if (entrada != null) {
-                    try {
-                        int cifra = Integer.parseInt(entrada);
-                        this.main.setSize(cifra);
-                    } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(this.getParent(), "Introdueix només una xifra", "Error",
-                                JOptionPane.ERROR_MESSAGE);
+                if (!bloqueig) {
+                    main.getAccions().changeSeguir();
+                    String entrada = JOptionPane.showInputDialog(this.getParent(), "Introdueix la llargaria desitjada");
+                    if (entrada != null) {
+                        try {
+                            int cifra = Integer.parseInt(entrada);
+                            this.main.setSize(cifra);
+                        } catch (NumberFormatException ex) {
+                            JOptionPane.showMessageDialog(this.getParent(), "Introdueix només una xifra", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
                     }
+                    main.notificar("Canviarll");
                 }
-                main.notificar("Canviarll");
+
             } else if (arg0.getSource() == posarPrecipici) {
-                torn = 1;
+                if(!bloqueig){
+                  torn = 1;  
+                }else{
+                    torn = null;
+                }
+                
             } else if (arg0.getSource() == posarMonstruo) {
-                torn = 2;
+                if(!bloqueig){
+                  torn = 2;  
+                }else{
+                    torn = null;
+                }
+                
             } else if (arg0.getSource() == posarTresor) {
-                torn = 3;
+                if(!bloqueig){
+                   torn = 3; 
+                }else{
+                    torn = null;
+                }
+                
+            }else if(arg0.getSource() == fletxa){
+                torn = 4;
             }
         }
     }
@@ -160,6 +214,8 @@ public class Interficie extends JFrame {
                         case 3:
                             main.getMapa().put_tesoro(casX, casY);
                             break;
+                        case 4:
+                            main.getMapa().mata_monstruo(casX,casY);
                     }
                     main.notificar("Repintar");
                 }

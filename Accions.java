@@ -5,6 +5,7 @@ public class Accions extends Thread {
     private boolean seguir = false;
     private Robot robot;
     private Main main;
+    private boolean acabat = false;
     private int tresors = 0;
     Stack<Direccions> stack = new Stack<Direccions>();
 
@@ -42,6 +43,7 @@ public class Accions extends Thread {
     @Override
     public void run() {
         while (seguir && this.tresors != this.main.getMapa().getTresors()) {
+            acabat = false;
             Casella percepcions_actuals = robot.percebre();
             robot.afegirBC(percepcions_actuals);
             Direccions accio_anterior = robot.getAccioAnterior();
@@ -62,7 +64,19 @@ public class Accions extends Thread {
             if (percepcions_actuals.isResplandor()) {
                 // Algo per llevar es tresor pintat
                 this.tresors++;
-                if(this.tresors == this.main.getMapa().getTresors()) continue;
+                //1) llevar del mapa
+                //2) llevar de la base de coneixements
+                main.getMapa().recollir_tresor(robot.getX(), robot.getY());
+                System.out.println("Has recollit un tresor a: "+robot.getX()+","+robot.getY());
+                percepcions_actuals.setResplandor(false);
+                robot.afegirBC(percepcions_actuals);
+                if(this.tresors == this.main.getMapa().getTresors()){
+                    acabat = true;
+                    System.out.println("Tornam cap a la sortida");
+                   continue; 
+                } 
+
+
             }
             // if (!percepcions_actuals.esPerillos()) {
             // CONSEGUIM INFORMACIO DE LES CASELLES ANAM A LA QUE MES ENS CONVENGUI
@@ -174,6 +188,10 @@ public class Accions extends Thread {
                 e.printStackTrace();
             }
             accioActual = stack.isEmpty() ? null : stack.pop();
+        }
+        if(acabat){
+            System.out.println("Has tornat els tresors a la casella de sortida");
+           main.getInterficie().acabat(); 
         }
         return;
     }
