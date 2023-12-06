@@ -32,6 +32,23 @@ public class Robot {
         }
     }
 
+    //No funcionarà
+    /*
+    public void monstre_mort(int x, int y){
+        put_hedor(x+1, y);
+        put_hedor(x-1, y);
+        put_hedor(x, y+1);
+        put_hedor(x, y-1);
+    }
+
+    public void put_hedor(int X, int Y) {
+        if (X >= this.main.getMapSize() || X < 0 || Y >= this.main.getMapSize() || Y < 0) // si la casella es a fora no feim res
+            return;
+
+        this.BC[X*this.main.getMapSize()+Y*this.main.getMapSize()].setHedor(false);
+        // a una casella que pot ser que ja tengui un monstre o un precipici.
+    }*/
+
     private Casella obtenirCasella(Direccions dir) {
         return this.BC[(this.Y + dir.movY) * this.main.getMapSize() + this.X + dir.movX];
     }
