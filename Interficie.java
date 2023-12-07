@@ -25,7 +25,7 @@ public class Interficie extends JFrame {
     public Interficie(Main main) {
         super("Robot");
         this.main = main;
-        fletxes =0;
+        fletxes = 0;
         torn = null;
         bloqueig = false;
         try {
@@ -43,7 +43,7 @@ public class Interficie extends JFrame {
         this.setLayout(new BorderLayout());
         panellPintar = new panellMapa(this);
         this.add(panellPintar, BorderLayout.CENTER);
-        botons = new panellBotons(main,this);
+        botons = new panellBotons(main, this);
         this.add(botons, BorderLayout.WEST);
         this.pack();
     }
@@ -53,15 +53,15 @@ public class Interficie extends JFrame {
         this.setVisible(true);
     }
 
-    public Integer fletxes(){
+    public Integer fletxes() {
         return fletxes;
     }
 
-    public void afegeix_fletxes(){
+    public void afegeix_fletxes() {
         fletxes++;
     }
 
-    public void lleva_fletxes(){
+    public void lleva_fletxes() {
         fletxes--;
     }
 
@@ -100,10 +100,10 @@ public class Interficie extends JFrame {
             Main main;
             Interficie interficie;
 
-            public Opcions(Main main,Interficie interficie) {
+            public Opcions(Main main, Interficie interficie) {
                 super("Direcció de la Fletxa");
                 this.interficie = interficie;
-                this.setBounds(250,250,300,200);
+                this.setBounds(250, 250, 300, 200);
                 this.setLayout(new BorderLayout());
                 panell = new JPanel();
                 this.main = main;
@@ -138,25 +138,25 @@ public class Interficie extends JFrame {
                 if (e.getSource() == nord) {
                     System.out.println("Dispara cap al nord");
                     interficie.lleva_fletxes();
-                    System.out.println("Numero de fletxes que queden: "+interficie.fletxes());
+                    System.out.println("Numero de fletxes que queden: " + interficie.fletxes());
                     main.getMapa().mata_monstruo(1);
                     this.setVisible(false);
                 } else if (e.getSource() == sud) {
                     System.out.println("Dispara cap al sud");
                     interficie.lleva_fletxes();
-                    System.out.println("Numero de fletxes que queden: "+interficie.fletxes());
+                    System.out.println("Numero de fletxes que queden: " + interficie.fletxes());
                     main.getMapa().mata_monstruo(2);
                     this.setVisible(false);
                 } else if (e.getSource() == est) {
                     System.out.println("Dispara cap al est");
                     interficie.lleva_fletxes();
-                    System.out.println("Numero de fletxes que queden: "+interficie.fletxes());
+                    System.out.println("Numero de fletxes que queden: " + interficie.fletxes());
                     main.getMapa().mata_monstruo(3);
                     this.setVisible(false);
                 } else if (e.getSource() == oest) {
                     System.out.println("Dispara cap al oest");
                     interficie.lleva_fletxes();
-                    System.out.println("Numero de fletxes que queden: "+interficie.fletxes());
+                    System.out.println("Numero de fletxes que queden: " + interficie.fletxes());
                     main.getMapa().mata_monstruo(4);
                     this.setVisible(false);
                 }
@@ -166,11 +166,11 @@ public class Interficie extends JFrame {
         private Main main;
         private Interficie interficie;
 
-        public panellBotons(Main main,Interficie interficie) {
+        public panellBotons(Main main, Interficie interficie) {
             this.main = main;
             this.interficie = interficie;
             setLayout(new GridLayout(7, 1));
-            opcions = new Opcions(main,interficie);
+            opcions = new Opcions(main, interficie);
             posarPrecipici = new JButton("Precipici");
             posarMonstruo = new JButton("Monstre");
             posarTresor = new JButton("Tresor"); // Pensar a veure si s'ha de posar un botó per el robot.
@@ -221,19 +221,16 @@ public class Interficie extends JFrame {
                     main.notificar("Comencar"); // de un en un
                 }
             } else if (arg0.getSource() == tempsAccio) {
-                if (!bloqueig) {
-                    String entrada = JOptionPane.showInputDialog(this.getParent(), "Nou temps entre acció (ms)");
-                    if (entrada != null) {
-                        try {
-                            int cifra = Integer.parseInt(entrada);
-                            this.main.setAccioDelay(cifra);
-                        } catch (NumberFormatException ex) {
-                            JOptionPane.showMessageDialog(this.getParent(), "Introdueix només una xifra", "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                        }
+                String entrada = JOptionPane.showInputDialog(this.getParent(), "Nou temps entre acció (ms)");
+                if (entrada != null) {
+                    try {
+                        int cifra = Integer.parseInt(entrada);
+                        this.main.setAccioDelay(cifra);
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(this.getParent(), "Introdueix només una xifra", "Error",
+                                JOptionPane.ERROR_MESSAGE);
                     }
                 }
-
             } else if (arg0.getSource() == llargMapa) {
                 if (!bloqueig) {
                     main.getAccions().changeSeguir();
@@ -272,16 +269,16 @@ public class Interficie extends JFrame {
                 }
 
             } else if (arg0.getSource() == fletxa) {
-                if(!bloqueig){
-                    if(interficie.fletxes()<=0){
+                if (!bloqueig) {
+                    if (interficie.fletxes() <= 0) {
                         System.out.println("No te queden fletxes per disparar!!!");
-                    }else{
-                       opcions.mostrar();  
+                    } else {
+                        opcions.mostrar();
                     }
-                }else{
+                } else {
                     System.out.println("Hem d'aturar el robot si volem disparar cap una direcció");
                 }
-                
+
             }
         }
     }
